@@ -1,4 +1,4 @@
-js = lib/leaflet/leaflet.js lib/async_storage.js lib/webL10n/l10n.js js/stumbler.js lib/cluster/cluster.js
+js = lib/leaflet/leaflet.js lib/async_storage.js lib/webL10n/l10n.js js/stumbler.js lib/cluster/cluster.js lib/pako/pako_deflate.js
 css = style/form.css style/stumbler.css lib/leaflet/leaflet.css lib/cluster/cluster.css
 jscmd := $(shell which uglifyjs2)
 

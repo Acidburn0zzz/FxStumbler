@@ -123,22 +123,29 @@
   // send {{
   function send(cb) {
     //jshint maxstatements: 30
-    var xhr, res, options, username;
+    var xhr, res, xhrOptions, username, data;
     username = document.querySelector("[name=username]").value.replace(/^\s+/g, '').replace(/\s+$/g, '');
-    options = {
+    xhrOptions = {
       mozAnon: true,
       mozSystem: true
     };
-    utils.log("[Send] Sending…", "debug");
     utils.log(items, "debug");
     try {
-      xhr = new XMLHttpRequest(options);
+      xhr = new XMLHttpRequest(xhrOptions);
       xhr.open("POST", "https://location.services.mozilla.com/v1/submit", false);
       xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
       if (username !== '') {
         xhr.setRequestHeader("X-Nickname", username);
       }
-      xhr.send(JSON.stringify({items: items}));
+      data = JSON.stringify({items: items});
+      if (options.compress) {
+        utils.log("[Send] Sending compressed data…", "debug");
+        xhr.setRequestHeader("Content-Encoding", "gzip");
+        xhr.send(window.pako.gzip(data));
+      } else {
+        utils.log("[Send] Sending raw data…", "debug");
+        xhr.send(data);
+      }
       if (xhr.status === 204) {
         utils.log("[Send] Done sending %s measurements", items.length, "info");
         items = [];
@@ -160,8 +167,8 @@
   }
   function search() {
     //jshint maxstatements: 30
-    var xhr, options, res;
-    options = {
+    var xhr, xhrOptions, res;
+    xhrOptions = {
       mozAnon: true,
       mozSystem: true
     };
@@ -171,7 +178,7 @@
         item.radio = item.cell[0].radio;
       }
       utils.log(item, "debug");
-      xhr = new XMLHttpRequest(options);
+      xhr = new XMLHttpRequest(xhrOptions);
       xhr.open("POST", "https://location.services.mozilla.com/v1/search?key=", false);
       xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
       xhr.send(JSON.stringify(item));
@@ -504,6 +511,7 @@
         options.lang     = val.lang     || 'en-US';
         options.username = val.username || '';
         options.mapType  = val.mapType  || 'full';
+        options.compress = val.compress;
       } else {
         options.accuracy = 50;
         options.action   = 'store';
@@ -513,6 +521,7 @@
         options.lang     = 'en-US';
         options.username = '';
         options.mapType  = 'full';
+        options.compress = false;
       }
       // Init options
       onAccuracyChange();
@@ -527,6 +536,12 @@
           e.checked = (e.value === options[type]);
         });
       });
+      ['compress'].forEach(function (type) {
+        $$("[name=" + type + "]").forEach(function (e) {
+          e.checked = options[type];
+        });
+      });
+      utils.log(options, "debug");
       _initialized = true;
     }
     function onSliderChange(option, target) {
@@ -849,6 +864,10 @@
       document.getElementById('options').addEventListener('change', function (ev) {
         if ((ev.target.tagName === 'INPUT' && ev.target.type === 'radio') || ev.target.name === 'username') {
           options[ev.target.name] = ev.target.value;
+          saveOptions();
+        }
+        if (ev.target.tagName === 'INPUT' && ev.target.type === 'checkbox') {
+          options[ev.target.name] = ev.target.checked;
           saveOptions();
         }
       });

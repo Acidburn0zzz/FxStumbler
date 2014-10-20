@@ -2,7 +2,7 @@
   "name": "FxStumbler",
   "description": "Client for Mozilla Location Service",
   "type": "certified",
-  "version": "0.1",
+  "version": "0.2",
   "launch_path": "/index.html",
   "developer": {
     "name": "Clochix",

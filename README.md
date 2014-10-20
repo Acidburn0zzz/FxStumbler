@@ -51,6 +51,13 @@ On my Keon, geolocation seems very inaccurate. So I added the ability to select 
 
 ## Release notes
 
+* [2014-10-20]
+  - add an option to compress data before sending, Refs #15
+  - bumped version du 0.2
+
+* [2014-08-24]
+  - fix dual-SIM support
+
 * [2014-02-03]
   - add some statistics
 
