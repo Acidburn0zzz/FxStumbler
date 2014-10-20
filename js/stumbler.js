@@ -108,6 +108,9 @@
         nb += v.cell.length;
       }
       if (Array.isArray(v.wifi)) {
+        v.wifi = v.wifi.filter(function (w) {
+          return w !== null && typeof w === 'object' && typeof w.key === 'string' && typeof w.signal === 'string';
+        });
         nb += v.wifi.length;
       }
       return nb > 0;
