@@ -107,13 +107,16 @@
       if (Array.isArray(v.cell)) {
         nb += v.cell.length;
       }
+      return nb > 0;
+    });
+    // cleanup wifi entries
+    values = values.map(function (v) {
       if (Array.isArray(v.wifi)) {
         v.wifi = v.wifi.filter(function (w) {
-          return w !== null && typeof w === 'object' && typeof w.key === 'string' && typeof w.signal === 'string';
+          return w !== null && typeof w === 'object' && typeof w.key === 'string';
         });
-        nb += v.wifi.length;
       }
-      return nb > 0;
+      return v;
     });
     if (values.length !== init) {
       utils.log("%s wrong items filtered", init - values.length, "warning");
@@ -931,7 +934,8 @@
             result: [
               {
                 ssid: '00:00:00:00',
-                signalStrengh: 0
+                bssid: 'mockdata',
+                signalStrength: "-15"
               }
             ]
           };
