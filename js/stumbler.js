@@ -565,12 +565,9 @@
       result  = document.getElementById("result");
       nbItems = document.getElementById("nbItems");
       document.body.addEventListener('click', function (event) {
-        var elmt;
-        if (event.target.dataset && event.target.dataset.target) {
-          elmt = document.getElementById(event.target.dataset.target);
-          if (elmt) {
-            elmt.classList.toggle('hidden');
-          }
+        var elmt = event.target;
+        if (elmt.classList.contains('heading')) {
+          elmt.classList.toggle('open');
         }
       });
       document.getElementById('mobile').addEventListener('click', getGeoloc);

@@ -27,6 +27,15 @@ h1, h2, h3 {
   box-shadow:  0 1px 1px rgba(0, 0, 0, .3);
   background: linear-gradient(to top,  navy,  deepskyblue);
 }
+h3 {
+  background: linear-gradient(to top,  navy,  #0040FF);
+}
+.heading + * {
+  display: none;
+}
+.heading.open + * {
+  display: inherit;
+}
 #map {
   height: calc(100% - 70px);
 }

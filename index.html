@@ -11,15 +11,15 @@
   </head>
   <body class="">
     <section id="sectionMain">
-      <h1 data-target="main">FxStumbler</h1>
+      <h1 class="heading open">FxStumbler</h1>
       <section id="main">
         <button type="button" id="mobile" data-l10n-id="getInfos">Get infos</button>
         <button type="button" id="monitor" data-state="stopped" data-l10n-id="monitoringStart">Start monitoring</button>
         <button type="button" id="search" data-l10n-id="getPosition"></button>
         <button type="button" id="openService" data-l10n-id="openService"></button>
       </section>
-      <h2 data-target="storage"><span data-l10n-id="storageTitle">Storage</span> (<span id="nbItems"></span> <span data-l10n-id="storageTitleEnd">items</span>)</h2>
-      <section id="storage" class="hidden">
+      <h2 class="heading"><span data-l10n-id="storageTitle">Storage</span> (<span id="nbItems"></span> <span data-l10n-id="storageTitleEnd">items</span>)</h2>
+      <section id="storage">
         <button type="button" id="displayStorage" data-l10n-id="storageDisplay">Display</button>
         <button type="button" id="displayMap" data-l10n-id="storageDisplayMap">Display on map</button>
         <button type="button" id="displayStats" data-l10n-id="storageStats"></button>
@@ -27,83 +27,86 @@
         <button type="button" id="clearStorage" data-l10n-id="storageClear">Clear</button>
         <button type="button" id="dumpStorage" data-l10n-id="storageDump">Dump</button>
       </section>
-      <h2 data-target="options" data-l10n-id="options">Options</h2>
-      <section id="options" class="hidden">
-        <fieldset>
-          <legend data-l10n-id="geolocType">Geoloc:</legend>
-          <label><input type="radio" name="geoloc" value="GPS" checked /><span data-l10n-id="geolocGps"/>GPS</span></label>
-          <label><input type="radio" name="geoloc" value="Ask" /><span data-l10n-id="geolocAsk"/>Ask</span></label>
-        </fieldset>
-        <fieldset>
-          <legend data-l10n-id="action">Action:</legend>
-          <label><input type="radio" name="action" value="send" checked /><span data-l10n-id="actionSend"/>Send</span></label>
-          <label><input type="radio" name="action" value="store"  /><span data-l10n-id="actionStore"/>Store</span></label>
-          <label><input type="radio" name="action" value="nothing" /><span data-l10n-id="actionNone"/>Nothing</span></label>
-        </fieldset>
-        <fieldset>
-          <label for="username" data-l10n-id="userName">Username: <input type="text" name="username" /></label>
-        </fieldset>
-        <fieldset>
-          <legend data-l10n-id="logLevel">Log level</legend>
-          <fieldset class="inline text">
-            <select id="settingsLogLevel">
-              <option value="debug"   data-l10n-id="logLevelDebug">Debug</option>
-              <option value="info"    data-l10n-id="logLevelInfo">Info</option>
-              <option value="warning" data-l10n-id="logLevelWarning">Warning</option>
-              <option value="error"   data-l10n-id="logLevelError">Error</option>
-            </select>
+      <h2 class="heading" data-l10n-id="options">Options</h2>
+      <section id="options">
+        <h3 class="heading open" data-l10n-id="optionsMain"></h3>
+        <section id="optionsMain">
+          <fieldset>
+            <legend data-l10n-id="geolocType">Geoloc:</legend>
+            <label><input type="radio" name="geoloc" value="GPS" checked /><span data-l10n-id="geolocGps"/>GPS</span></label>
+            <label><input type="radio" name="geoloc" value="Ask" /><span data-l10n-id="geolocAsk"/>Ask</span></label>
           </fieldset>
-        </fieldset>
-        <fieldset>
-          <legend data-l10n-id="lang">Lang</legend>
-          <fieldset class="inline text">
-            <select id="settingsLang">
-              <option value="bn"    data-l10n-id="langBengali"></option>
-              <option value="de"    data-l10n-id="langGerman"></option>
-              <option value="en-US" data-l10n-id="langEnglish"></option>
-              <option value="fr-FR" data-l10n-id="langFrench"></option>
-              <option value="hi"    data-l10n-id="langHindi"></option>
-              <option value="it"    data-l10n-id="langItalian"></option>
-              <option value="mr"    data-l10n-id="langMarathi"></option>
-              <option value="pt-BR" data-l10n-id="langPortuguese"></option>
-              <option value="sp"    data-l10n-id="langSpanish"></option>
-              <option value="zh-CN" data-l10n-id="langChinese"></option>
-              <option value="zh-TW" data-l10n-id="langTaiwan"></option>
-            </select>
+          <fieldset>
+            <legend data-l10n-id="action">Action:</legend>
+            <label><input type="radio" name="action" value="send" checked /><span data-l10n-id="actionSend"/>Send</span></label>
+            <label><input type="radio" name="action" value="store"  /><span data-l10n-id="actionStore"/>Store</span></label>
+            <label><input type="radio" name="action" value="nothing" /><span data-l10n-id="actionNone"/>Nothing</span></label>
           </fieldset>
-        </fieldset>
-        <fieldset>
-          <legend data-l10n-id="accuracy">Ignore if less accurate than</legend>
-          <p>
-            <input id="accuracy" type="range" min="5" max="200" step="5" value="50" />
-            <span id="accuracyValue"></span>m
-          </p>
-        </fieldset>
-        <fieldset>
-          <legend data-l10n-id="distance">Minimum distance between measures</legend>
-          <p>
-            <input id="delta" type="range" min="1" max="50" step="1" value="10" />
-            <span id="deltaValue"></span>m
-          </p>
-        </fieldset>
-        <fieldset>
-          <legend data-l10n-id="mapType"></legend>
-          <label><input type="radio" name="mapType" value="compact" checked /><span data-l10n-id="mapTypeCompact"/></span></label>
-          <label><input type="radio" name="mapType" value="full" /><span data-l10n-id="mapTypeFull"/></span></label>
-        </fieldset>
-        <fieldset>
-          <legend data-l10n-id="compress"></legend>
-          <label><span data-l10n-id="compressLabel"/></span><input type="checkbox" name="compress" checked /></label>
-        </fieldset>
-        <h3 data-target="optionsGeoloc" data-l10n-id="geolocOptions">Geoloc</h3>
-        <section id="optionsGeoloc" class="hidden">
+          <fieldset>
+            <label for="username" data-l10n-id="userName">Username: <input type="text" name="username" /></label>
+          </fieldset>
+          <fieldset>
+            <legend data-l10n-id="logLevel">Log level</legend>
+            <fieldset class="inline text">
+              <select id="settingsLogLevel">
+                <option value="debug"   data-l10n-id="logLevelDebug">Debug</option>
+                <option value="info"    data-l10n-id="logLevelInfo">Info</option>
+                <option value="warning" data-l10n-id="logLevelWarning">Warning</option>
+                <option value="error"   data-l10n-id="logLevelError">Error</option>
+              </select>
+            </fieldset>
+          </fieldset>
+          <fieldset>
+            <legend data-l10n-id="lang">Lang</legend>
+            <fieldset class="inline text">
+              <select id="settingsLang">
+                <option value="bn"    data-l10n-id="langBengali"></option>
+                <option value="de"    data-l10n-id="langGerman"></option>
+                <option value="en-US" data-l10n-id="langEnglish"></option>
+                <option value="fr-FR" data-l10n-id="langFrench"></option>
+                <option value="hi"    data-l10n-id="langHindi"></option>
+                <option value="it"    data-l10n-id="langItalian"></option>
+                <option value="mr"    data-l10n-id="langMarathi"></option>
+                <option value="pt-BR" data-l10n-id="langPortuguese"></option>
+                <option value="sp"    data-l10n-id="langSpanish"></option>
+                <option value="zh-CN" data-l10n-id="langChinese"></option>
+                <option value="zh-TW" data-l10n-id="langTaiwan"></option>
+              </select>
+            </fieldset>
+          </fieldset>
+          <fieldset>
+            <legend data-l10n-id="accuracy">Ignore if less accurate than</legend>
+            <p>
+              <input id="accuracy" type="range" min="5" max="200" step="5" value="50" />
+              <span id="accuracyValue"></span>m
+            </p>
+          </fieldset>
+          <fieldset>
+            <legend data-l10n-id="distance">Minimum distance between measures</legend>
+            <p>
+              <input id="delta" type="range" min="1" max="50" step="1" value="10" />
+              <span id="deltaValue"></span>m
+            </p>
+          </fieldset>
+          <fieldset>
+            <legend data-l10n-id="mapType"></legend>
+            <label><input type="radio" name="mapType" value="compact" checked /><span data-l10n-id="mapTypeCompact"/></span></label>
+            <label><input type="radio" name="mapType" value="full" /><span data-l10n-id="mapTypeFull"/></span></label>
+          </fieldset>
+          <fieldset>
+            <legend data-l10n-id="compress"></legend>
+            <label><span data-l10n-id="compressLabel"/></span><input type="checkbox" name="compress" checked /></label>
+          </fieldset>
+        </section>
+        <h3 class="heading" data-l10n-id="geolocOptions">Geoloc</h3>
+        <section id="optionsGeoloc">
           <p><label data-l10n-id="geolocAccuracy">High Accuracy <input type="checkbox" checked id="geoAccur"/></label></p>
           <p><label data-l10n-id="geolocTimeout">Timeout <input type="text" value="60000" id="geoTo"/></label></p>
           <p><label data-l10n-id="geolocAge">Maximum age <input type="text" value="0" id="geoMax"/></label></p>
         </section>
       </section>
-      <h2 data-target="logs" data-l10n-id="logs">Logs</h2>
-      <section id="logs" class="hidden">
+      <h2 class="heading" data-l10n-id="logs">Logs</h2>
+      <section id="logs">
         <button type="button" id="clearLogs" data-l10n-id="logsClear">Clear logs</button>
         <p>
           <pre id="result"></pre>
