@@ -51,6 +51,10 @@ On my Keon, geolocation seems very inaccurate. So I added the ability to select 
 
 ## Release notes
 
+* [2015-10-22]
+  - allow to reload data saved in files
+  - bumped version du 0.3
+
 * [2014-10-20]
   - add an option to compress data before sending, Refs #15
   - bumped version du 0.2

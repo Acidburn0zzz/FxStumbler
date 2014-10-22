@@ -1,5 +1,5 @@
 //jshint browser: true
-/*global asyncStorage: true, L */
+/*global asyncStorage: true, L: true, File: true */
 (function () {
   //jshint maxstatements: 31
   "use strict";
@@ -95,7 +95,7 @@
           if (this.result) {
             file = this.result;
             if (/^stumbler.*\.json$/.test(file.name.split('/').pop())) {
-              res.push(file.name);
+              res.push(file);
             }
           }
           if (!this.done) {
@@ -129,6 +129,18 @@
       request.onerror = function () {
         utils.log("Unable to get the file: " + this.error.name, "error");
       };
+    },
+    remove: function (filename, cb) {
+      var sdcard, request;
+      sdcard  = navigator.getDeviceStorage("sdcard");
+      request = sdcard.delete(filename);
+      request.onsuccess = function () {
+        utils.log("File " + filename + " deleted", "info");
+        cb();
+      };
+      request.onerror = function () {
+        utils.log("Unable to delete the file: " + this.error.name, 'error');
+      };
     }
   };
   actions = {
@@ -142,13 +154,40 @@
         } else {
           list.forEach(function (file) {
             var fileElmt = document.createElement('li');
-            fileElmt.dataset.file = file;
-            fileElmt.textContent  = file.split('/').pop();
+            fileElmt.dataset.file = file.name;
+            fileElmt.textContent  = file.name.split('/').pop();
             fileElmt.classList.add('button');
             listElmt.appendChild(fileElmt);
           });
         }
       });
+    },
+    fileLoad: function () {
+      var detail = document.getElementById('fileDetail');
+      fs.load(detail.dataset.file, function (data) {
+        if (data) {
+          asyncStorage.setItem('items', data, function () {
+            var nb = JSON.parse(data).length;
+            utils.log("Done loading %s items.", nb, "info");
+            nbItems.innerHTML = nb.length;
+          });
+        } else {
+          utils.log("Empty file", 'warning');
+        }
+      });
+      document.getElementById('sectionMain').classList.toggle('hidden');
+      detail.classList.toggle('hidden');
+    },
+    fileDelete: function () {
+      var detail = document.getElementById('fileDetail');
+      fs.remove(detail.dataset.file, function () {
+        document.getElementById('sectionMain').classList.toggle('hidden');
+        detail.classList.toggle('hidden');
+      });
+    },
+    fileCancel: function () {
+      document.getElementById('sectionMain').classList.toggle('hidden');
+      document.getElementById('fileDetail').classList.toggle('hidden');
     }
   };
   function forEachMobileConnection(cb) {
@@ -948,13 +987,11 @@
       });
       document.getElementById('fileList').addEventListener('click', function (ev) {
         if (ev.target.dataset.file) {
-          fs.load(ev.target.dataset.file, function (data) {
-            asyncStorage.setItem('items', data, function () {
-              var nb = JSON.parse(data).length;
-              utils.log("Done loading %s items.", nb, "info");
-              nbItems.innerHTML = nb.length;
-            });
-          });
+          var detail = document.getElementById('fileDetail');
+          detail.querySelector('h4').textContent = ev.target.dataset.file;
+          detail.dataset.file = ev.target.dataset.file;
+          document.getElementById('sectionMain').classList.toggle('hidden');
+          detail.classList.toggle('hidden');
         }
       });
 
@@ -1009,6 +1046,7 @@
 
   // {{ Create Mock
   function createMock() {
+    var info, files = [];
     navigator.mozWifiManager = {
       getNetworks: function () {
         var res = {};
@@ -1027,7 +1065,7 @@
         return res;
       }
     };
-    var info = {
+    info = {
       'type': 'gsm',
       'network': {
         'mcc': 'mcc',
@@ -1057,6 +1095,46 @@
         };
         self.onsuccess.call(res);
       }, 50);
+    };
+    navigator.getDeviceStorage = function () {
+      return {
+        addNamed: function (file, filename) {
+          var res = {};
+          filename = '/sdcard/' + filename;
+          files.push(filename);
+          window.setTimeout(function () {
+            res.onsuccess.call({result: filename});
+          }, 50);
+          return res;
+        },
+        enumerate: function () {
+          var cursor = {},
+              res = {done: true};
+          if (files.length > 0) {
+            res.result = {name: files[0]};
+          }
+          window.setTimeout(function () {
+            cursor.onsuccess.call(res);
+          }, 50);
+          return cursor;
+        },
+        get: function (filename) {
+          var request = {};
+          window.setTimeout(function () {
+            request.onsuccess.call({result: new File([], filename, null)});
+          }, 50);
+          return request;
+        },
+        "delete": function (filename) {
+          var request = {};
+          window.setTimeout(function () {
+            files = [];
+            request.onsuccess.call();
+          }, 50);
+          return request;
+        }
+
+      };
     };
   }
   if (typeof navigator.mozWifiManager === 'undefined' && typeof navigator.mozMobileConnection === 'undefined' && typeof window.MozActivity === 'undefined') {

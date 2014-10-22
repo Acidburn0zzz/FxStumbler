@@ -3,7 +3,7 @@
   "package_path" : "http://clochix.net/public/stumbler/stumbler.zip",
   "description": "Client for Mozilla Location Service",
   "type": "certified",
-  "version": "0.2",
+  "version": "0.3",
   "launch_path": "/index.html",
   "developer": {
     "name": "Clochix",
