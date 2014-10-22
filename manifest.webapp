@@ -10,7 +10,7 @@
   },
   "permissions": {
     "device-storage:sdcard": {
-      "access": "createonly",
+      "access": "readwrite",
       "description": "dump data to SDCard"
     },
     "geolocation": {

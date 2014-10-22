@@ -12,6 +12,8 @@
       curCells = [],
       options,
       utils,
+      fs,
+      actions,
       map,
       group,
       _;
@@ -61,6 +63,92 @@
         res.unshift(utils.format('<span class="%s">[%s][%s]</span> %s', level, getDate(), level, message));
         result.innerHTML = res.join("\n");
       }
+    }
+  };
+  fs = {
+    save: function (data) {
+      try {
+        var d, sdcard, file, request;
+        d = new Date();
+        d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+        sdcard  = navigator.getDeviceStorage("sdcard");
+        file    = new Blob([data], {type: "text/plain"});
+        request = sdcard.addNamed(file, "stumbler" + d.toISOString().replace(/[^0-9]/g, '').substr(0, 14) + ".json");
+        request.onsuccess = function () {
+          var name = this.result;
+          utils.log('[storage] File "' + name + '" successfully wrote on the sdcard storage area', 'info');
+        };
+        request.onerror = function () {
+          utils.log('[storage] Unable to write the file: ' + this.error, 'error');
+        };
+      } catch (e) {
+        utils.log("Error retrieving stored items: " + e, "error");
+      }
+    },
+    list: function (cb) {
+      var sdcard, cursor, res = [];
+      sdcard = navigator.getDeviceStorage('sdcard');
+      cursor = sdcard.enumerate();
+      cursor.onsuccess = function () {
+        try {
+          var file;
+          if (this.result) {
+            file = this.result;
+            if (/^stumbler.*\.json$/.test(file.name.split('/').pop())) {
+              res.push(file.name);
+            }
+          }
+          if (!this.done) {
+            this.continue();
+          } else {
+            cb(res);
+          }
+        } catch (e) {
+          utils.log("Error listing files: " + e, "error");
+        }
+      };
+      cursor.onerror = function () {
+        utils.log("Error listing files: " + this.error.name, "error");
+      };
+    },
+    load: function (file, cb) {
+      var sdcard, request;
+      sdcard = navigator.getDeviceStorage('sdcard');
+      request = sdcard.get(file);
+
+      request.onsuccess = function () {
+        var file, reader;
+        file = this.result;
+        reader = new FileReader();
+        reader.onload = function (e) {
+          cb(e.target.result);
+        };
+        reader.readAsText(file);
+      };
+
+      request.onerror = function () {
+        utils.log("Unable to get the file: " + this.error.name, "error");
+      };
+    }
+  };
+  actions = {
+    fileList: function () {
+      fs.list(function (list) {
+        var listElmt;
+        listElmt = document.getElementById('fileList');
+        listElmt.innerHTML = '';
+        if (list.length === 0) {
+          utils.log('No files', 'warning');
+        } else {
+          list.forEach(function (file) {
+            var fileElmt = document.createElement('li');
+            fileElmt.dataset.file = file;
+            fileElmt.textContent  = file.split('/').pop();
+            fileElmt.classList.add('button');
+            listElmt.appendChild(fileElmt);
+          });
+        }
+      });
     }
   };
   function forEachMobileConnection(cb) {
@@ -569,6 +657,9 @@
         if (elmt.classList.contains('heading')) {
           elmt.classList.toggle('open');
         }
+        if (elmt.dataset.action) {
+          actions[elmt.dataset.action]();
+        }
       });
       document.getElementById('mobile').addEventListener('click', getGeoloc);
       document.getElementById('monitor').addEventListener('click', function () {
@@ -644,27 +735,11 @@
               value = items;
               utils.log("Nothing stored", "info");
             } else {
-              try {
-                var d, sdcard, file, request;
-                d = new Date();
-                d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
-                sdcard  = navigator.getDeviceStorage("sdcard");
-                file    = new Blob([value], {type: "text/plain"});
-                request = sdcard.addNamed(file, "stumbler" + d.toISOString().replace(/[^0-9]/g, '').substr(0, 14) + ".json");
-                request.onsuccess = function () {
-                  var name = this.result;
-                  utils.log('[storage] File "' + name + '" successfully wrote on the sdcard storage area', 'info');
-                };
-                request.onerror = function () {
-                  utils.log('[storage] Unable to write the file: ' + this.error, 'error');
-                };
-              } catch (e) {
-                utils.log("Error retrieving stored items: " + e, "error");
-              }
+              fs.save(value);
             }
           });
         } catch (e) {
-          utils.log("Error in displayStorage: " + e, "error");
+          utils.log("Error in dumpStorage: " + e, "error");
         }
         return false;
       });
@@ -869,6 +944,17 @@
         if (ev.target.tagName === 'INPUT' && ev.target.type === 'checkbox') {
           options[ev.target.name] = ev.target.checked;
           saveOptions();
+        }
+      });
+      document.getElementById('fileList').addEventListener('click', function (ev) {
+        if (ev.target.dataset.file) {
+          fs.load(ev.target.dataset.file, function (data) {
+            asyncStorage.setItem('items', data, function () {
+              var nb = JSON.parse(data).length;
+              utils.log("Done loading %s items.", nb, "info");
+              nbItems.innerHTML = nb.length;
+            });
+          });
         }
       });
 

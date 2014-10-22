@@ -104,6 +104,12 @@
           <p><label data-l10n-id="geolocTimeout">Timeout <input type="text" value="60000" id="geoTo"/></label></p>
           <p><label data-l10n-id="geolocAge">Maximum age <input type="text" value="0" id="geoMax"/></label></p>
         </section>
+        <h3 class="heading" data-l10n-id="optionsFiles">Files</h3>
+        <section>
+          <button type="button" data-l10n-id="fileList" data-action="fileList"></button>
+          <ul id="fileList">
+          </ul>
+        </section>
       </section>
       <h2 class="heading" data-l10n-id="logs">Logs</h2>
       <section id="logs">
@@ -113,7 +119,7 @@
         </p>
       </section>
     </section>
-    <section id="sectionMap" class="hidden">
+    <section id="sectionMap" class="hidden popup">
       <div id="map"></div>
       <div>
         <button type="button" id="mapBack" data-l10n-id="mapBack"></button>
