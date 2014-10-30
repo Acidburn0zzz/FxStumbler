@@ -21,7 +21,7 @@
     geoloc: 'GPS',
     action: 'send',
     logLevel: 'debug',
-    lang: 'en-US',
+    lang: navigator.language || 'en-US',
     accuracy: 50,
     delta: 10,
     mapType: 'full',
@@ -638,7 +638,7 @@
         options.delta    = val.delta    || 10;
         options.geoloc   = val.geoloc   || 'GPS';
         options.logLevel = val.logLevel || 'debug';
-        options.lang     = val.lang     || 'en-US';
+        options.lang     = val.lang     || navigator.language || 'en-US';
         options.username = val.username || '';
         options.mapType  = val.mapType  || 'full';
         options.compress = val.compress;
@@ -648,7 +648,7 @@
         options.delta    = 10;
         options.geoloc   = 'GPS';
         options.logLevel = 'debug';
-        options.lang     = 'en-US';
+        options.lang     = navigator.language || 'en-US';
         options.username = '';
         options.mapType  = 'full';
         options.compress = false;
