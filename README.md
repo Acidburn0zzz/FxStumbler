@@ -51,7 +51,10 @@ On my Keon, geolocation seems very inaccurate. So I added the ability to select 
 
 ## Release notes
 
-* [2015-10-22]
+* [2014-10-29]
+  - use system language as default
+
+* [2014-10-22]
   - allow to reload data saved in files
   - bumped version du 0.3
 

@@ -923,7 +923,7 @@
                 send(function () {
                   utils.log("Done sending " + toSend + " items", "info");
                   asyncStorage.setItem('items', JSON.stringify([]), function () {
-                    utils.log("Done reseting storage", "info");
+                    utils.log("Done resetting storage", "info");
                     nbItems.innerHTML = "0";
                   });
                 });
