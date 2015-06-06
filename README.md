@@ -16,6 +16,7 @@ You can either just download and extract the archive, or clone the repository :
 Or
 
     git clone https://github.com/clochix/FxStumbler
+    cd FxStumbler
     make all
 
 Then create a new packaged app into the [App Manager](https://developer.mozilla.org/en-US/docs/Mozilla/Firefox_OS/Using_the_App_Manager), and install the application on your phone. If you haven’t yet, don’t forget to [enable remote debugging](https://developer.mozilla.org/en-US/docs/Mozilla/Firefox_OS/Debugging/Developer_settings#Remote_debugging) on your phone.
